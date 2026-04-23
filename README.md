@@ -1,16 +1,65 @@
-# React + Vite
+# Command Center
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Weather tracking dashboard with live radar, forecasts, severe weather alerts, air quality, and camera feeds
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React, Vite, Tailwind CSS, Leaflet.
 
-## React Compiler
+## What it includes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Air Quality
+- Alerts Panel
+- Cameras
+- Current Weather
+- Daily Forecast
+- Dashboard
+- Header
+- Historical Weather
+- Hourly Forecast
+- Lightning Map
+- Loading Spinner
+- Meteograms
 
-## Expanding the ESLint configuration
+## Scripts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Command | Description |
+|---|---|
+| `npm run dev` | Run the local development server: `vite` |
+| `npm run build` | Create a production build: `vite build` |
+| `npm run lint` | Run lint checks: `eslint .` |
+| `npm run preview` | Preview the production build locally: `vite preview` |
+
+## Local setup
+
+```bash
+npm install
+npm run dev
+```
+
+## Repository layout
+
+```text
+.github/
+public/
+  favicon.png
+  logo.png
+src/
+  components/
+  hooks/
+  services/
+  utils/
+  App.jsx
+  index.css
+  main.jsx
+.gitignore
+eslint.config.js
+index.html
+package-lock.json
+package.json
+vite.config.js
+```
+
+## Notes
+
+This README is generated from the current repository structure and package metadata so the GitHub front page reflects the actual project rather than a starter template.
