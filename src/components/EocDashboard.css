@@ -410,22 +410,58 @@
     linear-gradient(155deg, #9fd8ff 0%, #73b6d8 47%, #2d7f91 100%);
 }
 
+.eoc-scene-night .eoc-condition-art {
+  background:
+    radial-gradient(circle at 74% 18%, rgba(226, 246, 255, 0.52), transparent 10%),
+    radial-gradient(circle at 24% 30%, rgba(47, 132, 255, 0.2), transparent 22%),
+    linear-gradient(155deg, #15264c 0%, #08182b 48%, #03080f 100%);
+}
+
+.eoc-scene-cloudy .eoc-condition-art,
+.eoc-scene-overcast .eoc-condition-art {
+  background:
+    radial-gradient(circle at 28% 22%, rgba(198, 226, 236, 0.3), transparent 21%),
+    radial-gradient(circle at 70% 18%, rgba(125, 165, 184, 0.26), transparent 24%),
+    linear-gradient(155deg, #687d8d 0%, #304352 47%, #101c25 100%);
+}
+
+.eoc-scene-overcast .eoc-condition-art {
+  background:
+    radial-gradient(circle at 28% 22%, rgba(196, 213, 220, 0.26), transparent 24%),
+    linear-gradient(155deg, #52616c 0%, #26343d 48%, #0d151a 100%);
+}
+
+.eoc-scene-drizzle .eoc-condition-art,
+.eoc-scene-rain .eoc-condition-art {
+  background:
+    radial-gradient(circle at 68% 15%, rgba(125, 232, 255, 0.24), transparent 22%),
+    linear-gradient(155deg, #35516a 0%, #112a3e 48%, #061019 100%);
+}
+
 .eoc-scene-storm .eoc-condition-art {
   background:
     radial-gradient(circle at 38% 16%, rgba(255, 255, 255, 0.24), transparent 12%),
     linear-gradient(155deg, #2a3048 0%, #10213a 42%, #050912 100%);
 }
 
-.eoc-scene-watch .eoc-condition-art {
+.eoc-scene-snow .eoc-condition-art {
   background:
-    radial-gradient(circle at 26% 22%, rgba(217, 160, 82, 0.42), transparent 20%),
-    radial-gradient(circle at 74% 16%, rgba(47, 132, 255, 0.3), transparent 24%),
-    linear-gradient(155deg, #29344a 0%, #0d2337 47%, #06131a 100%);
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.52), transparent 20%),
+    radial-gradient(circle at 72% 12%, rgba(185, 233, 247, 0.34), transparent 24%),
+    linear-gradient(155deg, #91adc1 0%, #486a82 46%, #173145 100%);
+}
+
+.eoc-scene-fog .eoc-condition-art {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.34), transparent 32%),
+    linear-gradient(155deg, #a7bac0 0%, #667e86 48%, #243a42 100%);
 }
 
 .eoc-sun-disc,
 .eoc-cloud,
 .eoc-rain,
+.eoc-snow,
+.eoc-fog-bank,
 .eoc-lightning-bolt,
 .eoc-mountain {
   position: absolute;
@@ -440,6 +476,22 @@
   background: radial-gradient(circle, #fff8c6 0 28%, #ffd06c 54%, rgba(255, 208, 108, 0.18) 72%, transparent 73%);
   filter: drop-shadow(0 0 36px rgba(255, 203, 108, 0.5));
   animation: eoc-float 6s ease-in-out infinite alternate;
+}
+
+.eoc-scene-night .eoc-sun-disc {
+  width: 72px;
+  height: 72px;
+  background: radial-gradient(circle at 38% 38%, #f7fbff 0 30%, #b7d4e8 56%, rgba(183, 212, 232, 0.18) 74%, transparent 75%);
+  filter: drop-shadow(0 0 32px rgba(183, 212, 232, 0.42));
+}
+
+.eoc-scene-overcast .eoc-sun-disc,
+.eoc-scene-rain .eoc-sun-disc,
+.eoc-scene-drizzle .eoc-sun-disc,
+.eoc-scene-storm .eoc-sun-disc,
+.eoc-scene-snow .eoc-sun-disc,
+.eoc-scene-fog .eoc-sun-disc {
+  opacity: 0.16;
 }
 
 .eoc-cloud {
@@ -469,18 +521,85 @@
   animation: eoc-cloud-drift 8s ease-in-out infinite alternate-reverse;
 }
 
+.eoc-scene-clear .cloud-two,
+.eoc-scene-night .cloud-two {
+  opacity: 0.24;
+}
+
+.eoc-scene-clear .cloud-one {
+  opacity: 0.42;
+}
+
+.eoc-scene-overcast .eoc-cloud,
+.eoc-scene-rain .eoc-cloud,
+.eoc-scene-drizzle .eoc-cloud,
+.eoc-scene-storm .eoc-cloud,
+.eoc-scene-snow .eoc-cloud,
+.eoc-scene-fog .eoc-cloud {
+  opacity: 0.94;
+  filter: saturate(0.72);
+}
+
 .eoc-rain {
   top: 176px;
   width: 2px;
   height: 42px;
   border-radius: 999px;
   background: linear-gradient(180deg, transparent, rgba(125, 232, 255, 0.88));
-  opacity: 0.72;
+  opacity: 0;
   animation: eoc-rain-fall 1.2s linear infinite;
 }
 
 .rain-one { right: 152px; }
 .rain-two { right: 112px; animation-delay: 0.3s; }
+.rain-three { right: 192px; animation-delay: 0.6s; }
+
+.eoc-scene-drizzle .eoc-rain {
+  height: 28px;
+  opacity: 0.42;
+  animation-duration: 1.7s;
+}
+
+.eoc-scene-rain .eoc-rain,
+.eoc-scene-storm .eoc-rain {
+  opacity: 0.78;
+}
+
+.eoc-snow {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(245, 253, 255, 0.9);
+  opacity: 0;
+  box-shadow: 0 0 14px rgba(245, 253, 255, 0.58);
+  animation: eoc-snow-fall 4s ease-in-out infinite;
+}
+
+.snow-one { left: 32%; top: 32%; }
+.snow-two { left: 58%; top: 24%; animation-delay: 0.9s; }
+.snow-three { left: 76%; top: 44%; animation-delay: 1.8s; }
+
+.eoc-scene-snow .eoc-snow {
+  opacity: 0.88;
+}
+
+.eoc-fog-bank {
+  left: 10%;
+  right: 10%;
+  height: 24px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(235, 250, 255, 0.62), transparent);
+  opacity: 0;
+  animation: eoc-fog-drift 6s ease-in-out infinite alternate;
+}
+
+.fog-one { top: 112px; }
+.fog-two { top: 156px; animation-delay: 1.2s; }
+
+.eoc-scene-fog .eoc-fog-bank,
+.eoc-scene-overcast .fog-two {
+  opacity: 0.78;
+}
 
 .eoc-lightning-bolt {
   top: 152px;
@@ -493,8 +612,7 @@
   filter: drop-shadow(0 0 18px rgba(125, 232, 255, 0.82));
 }
 
-.eoc-scene-storm .eoc-lightning-bolt,
-.eoc-scene-watch .eoc-lightning-bolt {
+.eoc-scene-storm .eoc-lightning-bolt {
   opacity: 1;
   animation: eoc-flash 2.4s steps(2, end) infinite;
 }
@@ -985,6 +1103,16 @@
   from { transform: translateY(-12px); opacity: 0; }
   30% { opacity: 0.8; }
   to { transform: translateY(34px); opacity: 0; }
+}
+
+@keyframes eoc-snow-fall {
+  from { transform: translate3d(-8px, -12px, 0); opacity: 0; }
+  20% { opacity: 0.9; }
+  to { transform: translate3d(12px, 84px, 0); opacity: 0; }
+}
+
+@keyframes eoc-fog-drift {
+  to { transform: translateX(24px); }
 }
 
 @keyframes eoc-flash {

@@ -8,7 +8,6 @@ import {
   Compass,
   Droplets,
   Eye,
-  Moon,
   RadioTower,
   RefreshCw,
   ShieldAlert,
@@ -17,6 +16,8 @@ import {
   Wind,
   Zap,
 } from 'lucide-react';
+import WeatherIcon from './WeatherIcon';
+import { getWeatherInfo } from '../utils/weatherCodes';
 import './EocDashboard.css';
 
 function readNumber(...values) {
@@ -37,6 +38,23 @@ function compassDirection(degrees) {
   if (degrees === null || degrees === undefined || Number.isNaN(degrees)) return 'Variable';
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
   return directions[Math.round(((degrees % 360) / 45)) % 8];
+}
+
+function sceneFromWeatherCode(code, current) {
+  if ([95, 96, 99].includes(code)) return 'storm';
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return 'snow';
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 'rain';
+  if ([51, 53, 55, 56, 57].includes(code)) return 'drizzle';
+  if ([45, 48].includes(code)) return 'fog';
+  if (code === 3) return 'overcast';
+  if (code === 2) return 'cloudy';
+  if (code === 1) return 'partly';
+  if (code === 0) return current?.is_day === 0 ? 'night' : 'clear';
+  if (readNumber(current?.snowfall) > 0) return 'snow';
+  if (readNumber(current?.rain, current?.precipitation) > 0) return 'rain';
+  if (readNumber(current?.cloud_cover) > 70) return 'overcast';
+  if (readNumber(current?.cloud_cover) > 35) return 'cloudy';
+  return current?.is_day === 0 ? 'night' : 'clear';
 }
 
 function SystemTile({ icon: Icon, label, value, detail, tone = 'teal' }) {
@@ -65,9 +83,13 @@ export default function EocDashboard({ weather, alerts = [], mode }) {
   const pressure = readNumber(current.pressure_msl, current.surface_pressure, current.pressure);
   const visibility = readNumber(current.visibility);
   const precipitation = readNumber(current.precipitation, current.rain, current.showers, current.snowfall);
+  const weatherCode = readNumber(current.weather_code, current.weathercode, current.weatherCode);
+  const weatherInfo = getWeatherInfo(weatherCode);
   const activeAlerts = alerts?.length || 0;
-  const conditionLabel = precipitation && precipitation > 0 ? 'Active precipitation' : activeAlerts ? 'Weather watch' : 'Partly monitored';
-  const sceneTone = precipitation && precipitation > 0 ? 'storm' : activeAlerts ? 'watch' : 'clear';
+  const conditionLabel = weatherInfo.label === 'Unknown'
+    ? precipitation && precipitation > 0 ? 'Active precipitation' : activeAlerts ? 'Weather watch' : 'Monitored'
+    : weatherInfo.label;
+  const sceneTone = sceneFromWeatherCode(weatherCode, current);
 
   const severity = useMemo(() => {
     if (activeAlerts >= 4) return { label: 'Elevated', tone: 'amber', score: 82 };
@@ -75,13 +97,31 @@ export default function EocDashboard({ weather, alerts = [], mode }) {
     return { label: 'Nominal', tone: 'teal', score: 24 };
   }, [activeAlerts]);
 
-  const forecastPreview = [
-    { label: 'Now', value: formatValue(temp, '°'), icon: CloudSun },
-    { label: '+2h', value: formatValue((temp ?? 72) - 1, '°'), icon: Wind },
-    { label: '+4h', value: formatValue((temp ?? 72) - 2, '°'), icon: Droplets },
-    { label: '+6h', value: formatValue((temp ?? 72) - 3, '°'), icon: CloudLightning },
-    { label: '+8h', value: formatValue((temp ?? 72) - 4, '°'), icon: Moon },
-  ];
+  const forecastPreview = useMemo(() => {
+    const hours = weather?.hourly;
+    if (!hours?.time?.length) {
+      return [
+        { label: 'Now', value: formatValue(temp, '°'), icon: weatherInfo.icon, isDay: current.is_day !== 0 },
+        { label: '+2h', value: formatValue((temp ?? 72) - 1, '°'), icon: 'CloudSun', isDay: true },
+        { label: '+4h', value: formatValue((temp ?? 72) - 2, '°'), icon: 'CloudDrizzle', isDay: true },
+        { label: '+6h', value: formatValue((temp ?? 72) - 3, '°'), icon: 'CloudRain', isDay: false },
+        { label: '+8h', value: formatValue((temp ?? 72) - 4, '°'), icon: 'CloudMoon', isDay: false },
+      ];
+    }
+
+    const now = Date.now();
+    const startIndex = Math.max(0, hours.time.findIndex((time) => new Date(time).getTime() >= now));
+    return [0, 2, 4, 6, 8].map((offset, itemIndex) => {
+      const idx = Math.min(startIndex + offset, hours.time.length - 1);
+      const code = hours.weather_code?.[idx];
+      return {
+        label: itemIndex === 0 ? 'Now' : `+${offset}h`,
+        value: formatValue(hours.temperature_2m?.[idx], '°'),
+        icon: getWeatherInfo(code).icon,
+        isDay: hours.is_day?.[idx] !== 0,
+      };
+    });
+  }, [weather, temp, weatherInfo.icon, current.is_day]);
 
   const metricTiles = [
     {
@@ -166,6 +206,12 @@ export default function EocDashboard({ weather, alerts = [], mode }) {
               <span className="eoc-cloud cloud-two" />
               <span className="eoc-rain rain-one" />
               <span className="eoc-rain rain-two" />
+              <span className="eoc-rain rain-three" />
+              <span className="eoc-snow snow-one" />
+              <span className="eoc-snow snow-two" />
+              <span className="eoc-snow snow-three" />
+              <span className="eoc-fog-bank fog-one" />
+              <span className="eoc-fog-bank fog-two" />
               <span className="eoc-lightning-bolt" />
               <span className="eoc-mountain ridge-one" />
               <span className="eoc-mountain ridge-two" />
@@ -173,10 +219,10 @@ export default function EocDashboard({ weather, alerts = [], mode }) {
           </div>
 
           <div className="eoc-weather-strip">
-            {forecastPreview.map(({ label, value, icon: Icon }) => (
+            {forecastPreview.map(({ label, value, icon, isDay }) => (
               <div className="eoc-hour-pill" key={label}>
                 <span>{label}</span>
-                <Icon size={18} strokeWidth={1.8} />
+                <WeatherIcon name={icon} size={18} isDay={isDay} />
                 <strong>{value}</strong>
               </div>
             ))}
