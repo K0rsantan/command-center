@@ -69,6 +69,121 @@
   background: rgba(36, 213, 195, 0.12) !important;
 }
 
+.eoc-shell-light button[class*="text-teal-300"],
+.eoc-shell-light a[class*="text-teal-300"] {
+  color: #00796f !important;
+}
+
+.eoc-shell-light button[class*="text-cyan-300"],
+.eoc-shell-light a[class*="text-cyan-300"] {
+  color: #047084 !important;
+}
+
+.eoc-shell-light button[class*="text-sky-300"],
+.eoc-shell-light a[class*="text-sky-300"] {
+  color: #0369a1 !important;
+}
+
+.eoc-shell-light button[class*="text-purple-300"],
+.eoc-shell-light a[class*="text-purple-300"] {
+  color: #6d28d9 !important;
+}
+
+.eoc-shell-light button[class*="text-red-300"],
+.eoc-shell-light a[class*="text-red-300"] {
+  color: #b91c1c !important;
+}
+
+.eoc-shell-light button[class*="text-orange-300"],
+.eoc-shell-light a[class*="text-orange-300"] {
+  color: #a84b08 !important;
+}
+
+.eoc-shell-light button[class*="text-amber-300"],
+.eoc-shell-light a[class*="text-amber-300"],
+.eoc-shell-light button[class*="text-yellow-300"],
+.eoc-shell-light a[class*="text-yellow-300"] {
+  color: #8a4b05 !important;
+}
+
+.eoc-shell-light button[class*="text-green-300"],
+.eoc-shell-light a[class*="text-green-300"] {
+  color: #166534 !important;
+}
+
+.eoc-shell-light button[class*="-500/25"],
+.eoc-shell-light button[class*="-500/20"],
+.eoc-shell-light a[class*="-500/20"],
+.eoc-shell-light a[class*="-500/10"] {
+  font-weight: 850;
+}
+
+.eoc-shell-light button[class*="bg-teal-500/25"],
+.eoc-shell-light a[class*="bg-teal-500/20"],
+.eoc-shell-light a[class*="bg-teal-500/10"] {
+  border-color: rgba(0, 121, 111, 0.42) !important;
+  background: rgba(20, 184, 166, 0.18) !important;
+}
+
+.eoc-shell-light button[class*="bg-cyan-500/25"],
+.eoc-shell-light button[class*="bg-cyan-500/20"],
+.eoc-shell-light a[class*="bg-cyan-500/20"],
+.eoc-shell-light a[class*="bg-cyan-500/10"] {
+  border-color: rgba(4, 112, 132, 0.42) !important;
+  background: rgba(6, 182, 212, 0.18) !important;
+}
+
+.eoc-shell-light button[class*="bg-sky-500/25"],
+.eoc-shell-light button[class*="bg-sky-500/20"],
+.eoc-shell-light a[class*="bg-sky-500/20"],
+.eoc-shell-light a[class*="bg-sky-500/10"] {
+  border-color: rgba(3, 105, 161, 0.42) !important;
+  background: rgba(14, 165, 233, 0.18) !important;
+}
+
+.eoc-shell-light button[class*="bg-purple-500/25"],
+.eoc-shell-light button[class*="bg-purple-500/20"],
+.eoc-shell-light a[class*="bg-purple-500/20"],
+.eoc-shell-light a[class*="bg-purple-500/10"] {
+  border-color: rgba(109, 40, 217, 0.4) !important;
+  background: rgba(168, 85, 247, 0.16) !important;
+}
+
+.eoc-shell-light button[class*="bg-red-500/25"],
+.eoc-shell-light button[class*="bg-red-500/20"],
+.eoc-shell-light a[class*="bg-red-500/20"],
+.eoc-shell-light a[class*="bg-red-500/10"] {
+  border-color: rgba(185, 28, 28, 0.42) !important;
+  background: rgba(239, 68, 68, 0.16) !important;
+}
+
+.eoc-shell-light button[class*="bg-orange-500/25"],
+.eoc-shell-light button[class*="bg-orange-500/20"],
+.eoc-shell-light a[class*="bg-orange-500/20"],
+.eoc-shell-light a[class*="bg-orange-500/10"] {
+  border-color: rgba(168, 75, 8, 0.42) !important;
+  background: rgba(249, 115, 22, 0.16) !important;
+}
+
+.eoc-shell-light button[class*="bg-amber-500/25"],
+.eoc-shell-light button[class*="bg-amber-500/20"],
+.eoc-shell-light button[class*="bg-yellow-500/25"],
+.eoc-shell-light a[class*="bg-amber-500/20"],
+.eoc-shell-light a[class*="bg-amber-500/10"],
+.eoc-shell-light a[class*="bg-yellow-500/20"],
+.eoc-shell-light a[class*="bg-yellow-500/10"] {
+  border-color: rgba(138, 75, 5, 0.42) !important;
+  background: rgba(245, 158, 11, 0.17) !important;
+}
+
+.eoc-shell-light button[class*="bg-green-500/25"],
+.eoc-shell-light button[class*="bg-green-500/20"],
+.eoc-shell-light a[class*="bg-green-500/20"],
+.eoc-shell-light a[class*="bg-green-500/10"] {
+  border-color: rgba(22, 101, 52, 0.4) !important;
+  background: rgba(34, 197, 94, 0.16) !important;
+}
+
 .eoc-shell-light [class*="hover:bg-neutral-700"]:hover,
 .eoc-shell-light [class*="hover:bg-neutral-800"]:hover {
   background-color: rgba(36, 213, 195, 0.12) !important;
