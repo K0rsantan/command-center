@@ -22,6 +22,7 @@ import NWSDiscussion from './components/NWSDiscussion';
 import TropicalTracker from './components/TropicalTracker';
 import LoadingSpinner from './components/LoadingSpinner';
 import { AlertTriangle } from 'lucide-react';
+import './components/LightModeFixes.css';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
