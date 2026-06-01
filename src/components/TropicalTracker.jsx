@@ -8,7 +8,7 @@ const BASINS = [
 ];
 
 const NHC_PRODUCTS = {
-  outlook_5d: { label: '5-Day Outlook', getUrl: (basin) => `https://www.nhc.noaa.gov/xgtwo/two_${basin}_5d0.png` },
+  outlook_7d: { label: '7-Day Outlook', getUrl: (basin) => `https://www.nhc.noaa.gov/xgtwo/two_${basin}_7d0.png` },
   outlook_2d: { label: '2-Day Outlook', getUrl: (basin) => `https://www.nhc.noaa.gov/xgtwo/two_${basin}_2d0.png` },
 };
 
@@ -24,7 +24,7 @@ const GOES_SECTOR_KEYS = Object.keys(GOES_SECTORS);
 
 export default function TropicalTracker() {
   const [basin, setBasin] = useState('atl');
-  const [outlookType, setOutlookType] = useState('outlook_5d');
+  const [outlookType, setOutlookType] = useState('outlook_7d');
   const [goesSector, setGoesSector] = useState('taw');
   const [imgKey, setImgKey] = useState(0);
 
@@ -94,7 +94,7 @@ export default function TropicalTracker() {
         <div className="relative bg-neutral-900">
           <img
             key={`outlook-${imgKey}`}
-            src={`${outlookUrl}?t=${Date.now()}-${imgKey}`}
+            src={`${outlookUrl}?v=${imgKey}`}
             alt={`NHC ${NHC_PRODUCTS[outlookType]?.label} - ${BASINS.find(b => b.id === basin)?.label}`}
             className="w-full h-auto"
             onError={(e) => { e.target.style.opacity = '0.3'; e.target.alt = 'Image unavailable'; }}
@@ -122,7 +122,7 @@ export default function TropicalTracker() {
         <div className="relative bg-neutral-900">
           <img
             key={`goes-${goesSector}-${imgKey}`}
-            src={`${goesUrl}?t=${Date.now()}-${imgKey}`}
+            src={`${goesUrl}?v=${imgKey}`}
             alt={`GOES Satellite - ${GOES_SECTORS[goesSector]?.label}`}
             className="w-full h-auto"
             onError={(e) => { e.target.style.opacity = '0.3'; e.target.alt = 'Satellite image unavailable'; }}
