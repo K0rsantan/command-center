@@ -111,6 +111,34 @@
   color: #166534 !important;
 }
 
+.eoc-shell-light [class*="text-emerald-300"] {
+  color: #047857 !important;
+}
+
+.eoc-shell-light [class*="text-pink-300"] {
+  color: #be185d !important;
+}
+
+.eoc-shell-light [class*="text-red-300"] {
+  color: #b91c1c !important;
+}
+
+.eoc-shell-light [class*="text-teal-300"] {
+  color: #00796f !important;
+}
+
+.eoc-shell-light [class*="text-cyan-300"] {
+  color: #047084 !important;
+}
+
+.eoc-shell-light [class*="text-orange-300"] {
+  color: #a84b08 !important;
+}
+
+.eoc-shell-light [class*="text-purple-300"] {
+  color: #6d28d9 !important;
+}
+
 .eoc-shell-light button[class*="-500/25"],
 .eoc-shell-light button[class*="-500/20"],
 .eoc-shell-light a[class*="-500/20"],
@@ -182,6 +210,37 @@
 .eoc-shell-light a[class*="bg-green-500/10"] {
   border-color: rgba(22, 101, 52, 0.4) !important;
   background: rgba(34, 197, 94, 0.16) !important;
+}
+
+.eoc-shell-light button[class*="bg-emerald-500/25"],
+.eoc-shell-light button[class*="bg-emerald-500/20"],
+.eoc-shell-light a[class*="bg-emerald-500/20"],
+.eoc-shell-light a[class*="bg-emerald-500/10"] {
+  color: #047857 !important;
+  border-color: rgba(4, 120, 87, 0.44) !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+}
+
+.eoc-shell-light button[class*="bg-pink-500/25"],
+.eoc-shell-light button[class*="bg-pink-500/20"],
+.eoc-shell-light a[class*="bg-pink-500/20"],
+.eoc-shell-light a[class*="bg-pink-500/10"] {
+  color: #be185d !important;
+  border-color: rgba(190, 24, 93, 0.42) !important;
+  background: rgba(236, 72, 153, 0.16) !important;
+}
+
+.eoc-shell-light div[class*="bg-red-500/10"],
+.eoc-shell-light div[class*="bg-red-500/20"] {
+  border-color: rgba(185, 28, 28, 0.34) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+}
+
+.eoc-shell-light div[class*="bg-red-500/10"] [class*="text-red-300"],
+.eoc-shell-light div[class*="bg-red-500/20"] [class*="text-red-300"],
+.eoc-shell-light div[class*="bg-red-500/10"] [class*="text-red-400"],
+.eoc-shell-light div[class*="bg-red-500/20"] [class*="text-red-400"] {
+  color: #b91c1c !important;
 }
 
 .eoc-shell-light [class*="hover:bg-neutral-700"]:hover,
