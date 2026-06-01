@@ -3,7 +3,7 @@ import { useLocation } from './hooks/useLocation';
 import { useWeather } from './hooks/useWeather';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
-import Dashboard from './components/Dashboard';
+import EocDashboard from './components/EocDashboard';
 import RadarMap from './components/RadarMap';
 import DailyForecast from './components/DailyForecast';
 import AlertsPanel from './components/AlertsPanel';
@@ -25,6 +25,7 @@ import { AlertTriangle } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [themeMode, setThemeMode] = useState('dark');
   const {
     location, loading: locLoading, savedLocations,
     setActiveLocation, detectLocation, saveLocation, removeLocation,
@@ -38,7 +39,7 @@ export default function App() {
   const isLoading = locLoading || weatherLoading;
 
   return (
-    <div className="min-h-screen weather-gradient">
+    <div className={`min-h-screen weather-gradient ${themeMode === 'dark' ? 'eoc-shell-dark' : 'eoc-shell-light'}`}>
       <Header
         location={location}
         savedLocations={savedLocations}
@@ -68,7 +69,14 @@ export default function App() {
           <LoadingSpinner />
         ) : (
           <div className="animate-fade-in">
-            {activeTab === 'dashboard' && weather && <Dashboard weather={weather} alerts={alerts} />}
+            {activeTab === 'dashboard' && weather && (
+              <EocDashboard
+                weather={weather}
+                alerts={alerts}
+                mode={themeMode}
+                onModeChange={setThemeMode}
+              />
+            )}
             {activeTab === 'radar' && <RadarMap location={location} />}
             {activeTab === 'satellite' && <SatelliteView />}
 
