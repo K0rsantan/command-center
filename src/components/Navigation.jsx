@@ -25,7 +25,7 @@ const tabs = [
 export default function Navigation({ activeTab, onTabChange, alertCount = 0 }) {
   return (
     <nav className="sticky top-[92px] z-40 eoc-command-nav">
-      <div className="max-w-7xl mx-auto eoc-nav-frame">
+      <div className="eoc-nav-frame">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
