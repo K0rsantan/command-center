@@ -12,7 +12,6 @@ import {
   RadioTower,
   RefreshCw,
   ShieldAlert,
-  Sun,
   Thermometer,
   Waves,
   Wind,
@@ -40,36 +39,6 @@ function compassDirection(degrees) {
   return directions[Math.round(((degrees % 360) / 45)) % 8];
 }
 
-function ModeSwitch({ mode, onModeChange }) {
-  const isDark = mode === 'dark';
-
-  return (
-    <button
-      className="eoc-mode-switch"
-      type="button"
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      aria-pressed={isDark}
-      onClick={() => onModeChange(isDark ? 'light' : 'dark')}
-    >
-      <span className="eoc-switch-track">
-        <span className="eoc-sky eoc-sky-light" />
-        <span className="eoc-sky eoc-sky-dark">
-          <span />
-          <span />
-          <span />
-        </span>
-        <span className="eoc-switch-orbit">
-          <span className="eoc-switch-rays" />
-          <span className="eoc-switch-body">
-            {isDark ? <Moon size={18} strokeWidth={2} /> : <Sun size={18} strokeWidth={2} />}
-          </span>
-        </span>
-      </span>
-      <span className="eoc-switch-label">{isDark ? 'Dark ops' : 'Day ops'}</span>
-    </button>
-  );
-}
-
 function SystemTile({ icon: Icon, label, value, detail, tone = 'teal' }) {
   return (
     <div className={`eoc-system-tile eoc-tone-${tone}`}>
@@ -85,7 +54,7 @@ function SystemTile({ icon: Icon, label, value, detail, tone = 'teal' }) {
   );
 }
 
-export default function EocDashboard({ weather, alerts = [], mode, onModeChange }) {
+export default function EocDashboard({ weather, alerts = [], mode }) {
   const current = weather?.current || weather?.current_weather || weather || {};
   const temp = readNumber(current.temperature_2m, current.temperature, current.temp, current.apparent_temperature);
   const feels = readNumber(current.apparent_temperature, current.feelsLike, current.feels_like);
@@ -165,7 +134,6 @@ export default function EocDashboard({ weather, alerts = [], mode, onModeChange 
             <Activity size={15} strokeWidth={2} />
             {severity.label}
           </span>
-          <ModeSwitch mode={mode} onModeChange={onModeChange} />
         </div>
       </div>
 

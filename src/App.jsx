@@ -50,6 +50,8 @@ export default function App() {
         onRemoveLocation={removeLocation}
         onRefresh={refresh}
         lastUpdate={lastUpdate}
+        mode={themeMode}
+        onModeChange={setThemeMode}
       />
 
       <Navigation
@@ -75,7 +77,6 @@ export default function App() {
                 weather={weather}
                 alerts={alerts}
                 mode={themeMode}
-                onModeChange={setThemeMode}
               />
             )}
             {activeTab === 'radar' && <RadarMap location={location} />}

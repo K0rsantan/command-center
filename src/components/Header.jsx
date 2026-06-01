@@ -1,11 +1,41 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, MapPin, X, Bookmark, BookmarkCheck, RefreshCw, Navigation } from 'lucide-react';
+import { Search, MapPin, X, Bookmark, BookmarkCheck, RefreshCw, Navigation, Moon, Sun } from 'lucide-react';
 import { searchLocations } from '../services/geocodingApi';
 import './Header.css';
 
+function ModeSwitch({ mode, onModeChange }) {
+  const isDark = mode === 'dark';
+
+  return (
+    <button
+      className="eoc-mode-switch"
+      type="button"
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      aria-pressed={isDark}
+      onClick={() => onModeChange(isDark ? 'light' : 'dark')}
+    >
+      <span className="eoc-switch-track">
+        <span className="eoc-sky eoc-sky-light" />
+        <span className="eoc-sky eoc-sky-dark">
+          <span />
+          <span />
+          <span />
+        </span>
+        <span className="eoc-switch-orbit">
+          <span className="eoc-switch-rays" />
+          <span className="eoc-switch-body">
+            {isDark ? <Moon size={18} strokeWidth={2} /> : <Sun size={18} strokeWidth={2} />}
+          </span>
+        </span>
+      </span>
+      <span className="eoc-switch-label">{isDark ? 'Dark ops' : 'Day ops'}</span>
+    </button>
+  );
+}
+
 export default function Header({
   location, savedLocations, onSelectLocation, onDetectLocation,
-  onSaveLocation, onRemoveLocation, onRefresh, lastUpdate,
+  onSaveLocation, onRemoveLocation, onRefresh, lastUpdate, mode, onModeChange,
 }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -101,6 +131,8 @@ export default function Header({
         </div>
 
         <div className="eoc-header-actions">
+          <ModeSwitch mode={mode} onModeChange={onModeChange} />
+
           <button onClick={onDetectLocation} title="Detect location"
             className="eoc-icon-button">
             <Navigation size={16} />

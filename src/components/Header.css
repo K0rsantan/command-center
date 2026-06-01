@@ -174,7 +174,15 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 9px;
+}
+
+.eoc-header-actions .eoc-mode-switch {
+  margin-right: 8px;
+}
+
+.eoc-header-actions .eoc-mode-switch + .eoc-icon-button {
+  margin-left: 2px;
 }
 
 .eoc-icon-button {
@@ -389,6 +397,13 @@
 
   .eoc-header-actions {
     gap: 4px;
+  }
+
+  .eoc-header-actions .eoc-mode-switch {
+    order: 10;
+    width: 100%;
+    margin: 6px 0 0;
+    justify-content: flex-start;
   }
 
   .eoc-icon-button {
