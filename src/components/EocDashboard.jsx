@@ -34,6 +34,12 @@ function formatValue(value, suffix = '') {
   return `${Math.round(value)}${suffix}`;
 }
 
+function compassDirection(degrees) {
+  if (degrees === null || degrees === undefined || Number.isNaN(degrees)) return 'Variable';
+  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  return directions[Math.round(((degrees % 360) / 45)) % 8];
+}
+
 function ModeSwitch({ mode, onModeChange }) {
   const isDark = mode === 'dark';
 
@@ -85,6 +91,7 @@ export default function EocDashboard({ weather, alerts = [], mode, onModeChange 
   const feels = readNumber(current.apparent_temperature, current.feelsLike, current.feels_like);
   const wind = readNumber(current.wind_speed_10m, current.windspeed, current.windSpeed, current.wind_speed);
   const gust = readNumber(current.wind_gusts_10m, current.windgusts, current.windGust);
+  const windDirection = readNumber(current.wind_direction_10m, current.winddirection, current.windDirection, current.wind_direction);
   const humidity = readNumber(current.relative_humidity_2m, current.humidity);
   const pressure = readNumber(current.pressure_msl, current.surface_pressure, current.pressure);
   const visibility = readNumber(current.visibility);
@@ -262,19 +269,49 @@ export default function EocDashboard({ weather, alerts = [], mode, onModeChange 
           <div className="eoc-panel-heading compact">
             <div>
               <p>Atmospheric motion</p>
-              <h2>Flow model</h2>
+              <h2>Wind field</h2>
             </div>
             <Waves size={22} strokeWidth={1.6} />
           </div>
-          <div className="eoc-flow-lines" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
+
+          <div className="eoc-flow-content">
+            <div className="eoc-flow-readouts">
+              <div>
+                <span>Sustained</span>
+                <strong>{formatValue(wind, ' mph')}</strong>
+              </div>
+              <div>
+                <span>Gust</span>
+                <strong>{formatValue(gust ?? wind, ' mph')}</strong>
+              </div>
+              <div>
+                <span>Pressure</span>
+                <strong>{pressure ? `${Math.round(pressure)} hPa` : '--'}</strong>
+              </div>
+              <div>
+                <span>Direction</span>
+                <strong>{compassDirection(windDirection)}</strong>
+              </div>
+            </div>
+
+            <div className="eoc-wind-map" style={{ '--wind-rotation': `${windDirection ?? 72}deg` }} aria-hidden="true">
+              <span className="eoc-pressure-isobar isobar-one" />
+              <span className="eoc-pressure-isobar isobar-two" />
+              <span className="eoc-pressure-isobar isobar-three" />
+              <span className="eoc-streamline stream-one" />
+              <span className="eoc-streamline stream-two" />
+              <span className="eoc-streamline stream-three" />
+              <span className="eoc-streamline stream-four" />
+              <span className="eoc-vector-arrow" />
+              <span className="eoc-pressure-node node-low">L</span>
+              <span className="eoc-pressure-node node-high">H</span>
+            </div>
           </div>
+
           <div className="eoc-chip-row">
-            <span><CloudSun size={14} /> Sky model</span>
-            <span><Zap size={14} /> Nowcast</span>
+            <span><CloudSun size={14} /> HRRR surface</span>
+            <span><Zap size={14} /> Nowcast wind</span>
+            <span><Wind size={14} /> {compassDirection(windDirection)} vector</span>
           </div>
         </div>
       </div>

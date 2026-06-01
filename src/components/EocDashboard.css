@@ -772,31 +772,167 @@
 
 .eoc-flow-panel {
   grid-column: span 2;
-  min-height: 180px;
+  min-height: 240px;
 }
 
-.eoc-flow-lines {
+.eoc-flow-content {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.eoc-flow-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.eoc-flow-readouts div {
+  min-width: 0;
+  border: 1px solid var(--eoc-line);
+  border-radius: 17px;
+  padding: 13px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent),
+    var(--eoc-card-strong);
+}
+
+.eoc-flow-readouts span {
+  display: block;
+  color: var(--eoc-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.eoc-flow-readouts strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--eoc-text);
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  line-height: 1;
+}
+
+.eoc-wind-map {
   position: relative;
-  height: 74px;
+  min-height: 154px;
   overflow: hidden;
-  border-radius: 18px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--eoc-blue), transparent 90%), transparent);
+  border: 1px solid var(--eoc-line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 18% 52%, color-mix(in srgb, var(--eoc-teal), transparent 72%), transparent 24%),
+    radial-gradient(circle at 82% 42%, color-mix(in srgb, var(--eoc-blue), transparent 76%), transparent 28%),
+    repeating-linear-gradient(90deg, transparent 0 44px, color-mix(in srgb, var(--eoc-line), transparent 35%) 45px 46px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.eoc-flow-lines span {
+.eoc-pressure-isobar,
+.eoc-streamline,
+.eoc-vector-arrow,
+.eoc-pressure-node {
   position: absolute;
-  left: -10%;
-  width: 120%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--eoc-teal), var(--eoc-blue), transparent);
-  transform: translateY(var(--flow-y)) rotate(var(--flow-rot));
-  animation: eoc-flow 3.4s ease-in-out infinite alternate;
 }
 
-.eoc-flow-lines span:nth-child(1) { --flow-y: 16px; --flow-rot: -2deg; }
-.eoc-flow-lines span:nth-child(2) { --flow-y: 30px; --flow-rot: 2deg; animation-delay: 0.2s; }
-.eoc-flow-lines span:nth-child(3) { --flow-y: 46px; --flow-rot: -1deg; animation-delay: 0.4s; }
-.eoc-flow-lines span:nth-child(4) { --flow-y: 60px; --flow-rot: 1deg; animation-delay: 0.6s; }
+.eoc-pressure-isobar {
+  width: 190px;
+  height: 78px;
+  border: 1px solid color-mix(in srgb, var(--eoc-muted), transparent 50%);
+  border-radius: 50%;
+  opacity: 0.58;
+}
+
+.isobar-one {
+  left: 8%;
+  top: 28%;
+  transform: rotate(-14deg);
+}
+
+.isobar-two {
+  right: 9%;
+  top: 15%;
+  transform: rotate(16deg);
+}
+
+.isobar-three {
+  left: 42%;
+  bottom: -12%;
+  transform: rotate(4deg);
+}
+
+.eoc-streamline {
+  left: -12%;
+  width: 124%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--eoc-teal), var(--eoc-blue), transparent);
+  opacity: 0.72;
+  transform: translateY(var(--stream-y)) rotate(var(--stream-rot));
+  animation: eoc-flow 4s ease-in-out infinite alternate;
+}
+
+.stream-one { --stream-y: 34px; --stream-rot: -4deg; }
+.stream-two { --stream-y: 61px; --stream-rot: 2deg; animation-delay: 0.2s; }
+.stream-three { --stream-y: 88px; --stream-rot: -1deg; animation-delay: 0.4s; }
+.stream-four { --stream-y: 113px; --stream-rot: 4deg; animation-delay: 0.6s; }
+
+.eoc-vector-arrow {
+  left: calc(50% - 24px);
+  top: calc(50% - 24px);
+  width: 48px;
+  height: 48px;
+  transform: rotate(var(--wind-rotation));
+  filter: drop-shadow(0 0 16px rgba(36, 213, 195, 0.42));
+}
+
+.eoc-vector-arrow::before,
+.eoc-vector-arrow::after {
+  content: "";
+  position: absolute;
+  background: var(--eoc-teal);
+}
+
+.eoc-vector-arrow::before {
+  left: 22px;
+  top: 6px;
+  width: 4px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+.eoc-vector-arrow::after {
+  left: 14px;
+  top: 5px;
+  width: 20px;
+  height: 20px;
+  clip-path: polygon(50% 0, 100% 100%, 50% 72%, 0 100%);
+}
+
+.eoc-pressure-node {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--eoc-line);
+  border-radius: 50%;
+  color: var(--eoc-text);
+  background: var(--eoc-card-strong);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.node-low {
+  left: 16px;
+  bottom: 14px;
+  color: var(--eoc-blue);
+}
+
+.node-high {
+  right: 18px;
+  top: 14px;
+  color: var(--eoc-teal);
+}
 
 .eoc-chip-row {
   gap: 8px;
@@ -826,7 +962,7 @@
 }
 
 @keyframes eoc-flow {
-  to { translate: 4% 0; opacity: 0.62; }
+  to { translate: 3.5% 0; opacity: 0.92; }
 }
 
 @keyframes eoc-spin {
@@ -871,6 +1007,10 @@
   }
 
   .eoc-weather-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .eoc-flow-content {
     grid-template-columns: 1fr;
   }
 
@@ -932,5 +1072,9 @@
 
   .eoc-hour-pill {
     min-width: 74px;
+  }
+
+  .eoc-flow-readouts {
+    grid-template-columns: 1fr;
   }
 }
