@@ -22,6 +22,10 @@ React, Vite, Tailwind CSS, Leaflet.
 - Loading Spinner
 - Meteograms
 
+## Vetted outage sources
+
+`src/services/vettedPowerOutageSources.js` tracks verified public utility outage feed candidates. Initial verified sources include DTE Energy, PECO, LG&E/KU, Austin Energy, and Tampa Electric. Kubra-backed summary feeds can be enabled through `getProductionPowerOutageSources()`; other candidates remain disabled until connector-specific ingestion is validated, so the app does not silently treat candidate feeds as production data.
+
 ## Scripts
 
 | Command | Description |

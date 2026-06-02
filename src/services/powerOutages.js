@@ -41,6 +41,116 @@ export function normalizePowerOutageRecord(record = {}, source = {}) {
   };
 }
 
+function unwrapKubraValue(value, fallback = 0) {
+  if (value && typeof value === 'object' && 'val' in value) return Number(value.val ?? fallback);
+  return Number(value ?? fallback);
+}
+
+function buildKubraSummaryUrl(intervalGenerationData) {
+  const normalizedPath = String(intervalGenerationData || '').replace(/^\/+/, '');
+  if (!normalizedPath) return '';
+  return `https://kubra.io/${normalizedPath}/public/summary-1/data.json`;
+}
+
+export function normalizeKubraSummaryRecord(record = {}, { source = {}, generatedAt = null, summaryUrl = '' } = {}) {
+  const event = normalizePowerOutageRecord({
+    id: `${source.id || 'kubra-summary'}-${record.summaryTotalId || 'total'}`,
+    title: `${source.authority || source.name || 'Utility'} outage summary`,
+    state: source.states?.[0] || null,
+    region: source.coverage || source.authority || source.name,
+    affectedCustomers: unwrapKubraValue(record.total_cust_a),
+    totalCustomers: unwrapKubraValue(record.total_cust_s),
+    status: 'active',
+    lastUpdatedAt: generatedAt,
+    lastCheckedAt: new Date().toISOString(),
+    sourceUrl: summaryUrl,
+    coverageNotes: `Kubra outage summary for ${source.coverage || source.authority || source.name}.`,
+  }, {
+    ...source,
+    url: summaryUrl || source.url,
+    enabled: true,
+  });
+
+  return {
+    ...event,
+    raw: record,
+  };
+}
+
+export async function fetchKubraOutageSummary(source, { fetchImpl = fetch } = {}) {
+  const checkedAt = new Date().toISOString();
+
+  try {
+    const currentStateResponse = await fetchImpl(source.currentStateUrl || source.url);
+    if (!currentStateResponse.ok) {
+      return {
+        events: [],
+        health: {
+          sourceId: source.id,
+          status: currentStateResponse.status === 429 ? SOURCE_HEALTH_STATUSES.RATE_LIMITED : SOURCE_HEALTH_STATUSES.FAILED,
+          checkedAt,
+          lastSuccessfulFetchAt: null,
+          message: `Kubra currentState failed with HTTP ${currentStateResponse.status}.`,
+          stale: true,
+          recordCount: 0,
+        },
+      };
+    }
+
+    const currentState = await currentStateResponse.json();
+    const summaryUrl = buildKubraSummaryUrl(currentState?.data?.interval_generation_data);
+    if (!summaryUrl) throw new Error('Kubra currentState did not include data.interval_generation_data.');
+
+    const summaryResponse = await fetchImpl(summaryUrl);
+    if (!summaryResponse.ok) {
+      return {
+        events: [],
+        health: {
+          sourceId: source.id,
+          status: summaryResponse.status === 429 ? SOURCE_HEALTH_STATUSES.RATE_LIMITED : SOURCE_HEALTH_STATUSES.FAILED,
+          checkedAt,
+          lastSuccessfulFetchAt: null,
+          message: `Kubra summary failed with HTTP ${summaryResponse.status}.`,
+          stale: true,
+          recordCount: 0,
+        },
+      };
+    }
+
+    const summary = await summaryResponse.json();
+    const totals = summary?.summaryFileData?.totals || [];
+    const generatedAt = summary?.summaryFileData?.date_generated || checkedAt;
+    const events = totals.map(record => normalizeKubraSummaryRecord(record, { source, generatedAt, summaryUrl }));
+
+    return {
+      events,
+      health: {
+        sourceId: source.id,
+        status: SOURCE_HEALTH_STATUSES.OK,
+        checkedAt,
+        lastSuccessfulFetchAt: checkedAt,
+        message: `Kubra summary responded successfully with ${events.length} outage summary record(s).`,
+        stale: false,
+        recordCount: events.length,
+        summaryUrl,
+      },
+    };
+  } catch (error) {
+    return {
+      events: [],
+      health: {
+        sourceId: source.id,
+        status: SOURCE_HEALTH_STATUSES.FAILED,
+        checkedAt,
+        lastSuccessfulFetchAt: null,
+        message: `Kubra outage source failed: ${error.message}`,
+        stale: true,
+        recordCount: 0,
+      },
+    };
+  }
+}
+
 export function summarizeOutageEvents(events = []) {
   const affectedCustomers = events.reduce((sum, event) => sum + (Number(event.affectedCustomers) || 0), 0);
   const maxScore = events.reduce((max, event) => Math.max(max, event.disruptionScore || 0), 0);
@@ -73,6 +183,10 @@ export async function fetchConfiguredPowerOutages({ sources = [], fetchImpl = fe
   }
 
   const results = await Promise.all(enabledSources.map(async source => {
+    if (source.platform === 'kubra-storm-center') {
+      return fetchKubraOutageSummary(source, { fetchImpl });
+    }
+
     try {
       const response = await fetchImpl(source.url);
       if (!response.ok) {

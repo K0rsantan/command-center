@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Map, Power, RefreshCw, ShieldAlert, Zap } from 'lucide-react';
 import { fetchDisruptiveEventsForState } from '../services/disruptiveEvents.js';
 import { fetchConfiguredPowerOutages, summarizeOutageEvents } from '../services/powerOutages.js';
-import { DISRUPTION_SOURCE_REGISTRY, SOURCE_HEALTH_STATUSES } from '../services/sourceRegistry.js';
+import { SOURCE_HEALTH_STATUSES } from '../services/sourceRegistry.js';
 import { US_STATE_REGIONS, classifyStateDisruption, getStateDisplayName, groupEventsByRegion } from '../services/usDisruptionRegions.js';
+import { getProductionPowerOutageSources } from '../services/vettedPowerOutageSources.js';
 
 const DEFAULT_STATE = 'FL';
 
@@ -66,7 +67,7 @@ export default function DisruptionsView() {
     let cancelled = false;
 
     async function loadOutages() {
-      const result = await fetchConfiguredPowerOutages({ sources: DISRUPTION_SOURCE_REGISTRY });
+      const result = await fetchConfiguredPowerOutages({ sources: getProductionPowerOutageSources() });
       if (!cancelled) setOutageData(result);
     }
 
@@ -201,7 +202,7 @@ export default function DisruptionsView() {
                 </div>
               ))}
               <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-xs text-emerald-100">
-                Power outage records now normalize into the same event model as weather alerts, so approved utility/ArcGIS feeds can populate this page without redesign.
+                Power outage records now normalize into the same event model as weather alerts. Vetted Kubra utility summaries are live where configured; other vetted candidates stay disabled until their connector shape is validated.
               </div>
             </div>
           </div>
