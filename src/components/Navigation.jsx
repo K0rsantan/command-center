@@ -1,11 +1,12 @@
 import {
   LayoutDashboard, Map, Calendar, AlertTriangle, Wind, Camera,
   Satellite, BarChart3, Snowflake, History, Radio,
-  LineChart, Building2, CloudLightning, Layers
+  LineChart, Building2, CloudLightning, Layers, Siren
 } from 'lucide-react';
 
 const tabs = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'disruptions', label: 'Disruptions', icon: Siren },
   { id: 'radar', label: 'Radar', icon: Map },
   { id: 'satellite', label: 'Satellite', icon: Satellite },
   { id: 'models', label: 'Models', icon: BarChart3 },

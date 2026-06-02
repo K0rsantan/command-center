@@ -3,6 +3,8 @@ import test from 'node:test';
 
 import { DISRUPTION_SOURCE_REGISTRY, SOURCE_HEALTH_STATUSES, SOURCE_TYPES, buildSourceUrl, getSourceDefinition } from '../src/services/sourceRegistry.js';
 import { fetchDisruptiveEventsForState, fetchNwsActiveAlertsByState, normalizeNwsAlertFeature, scoreNwsAlert } from '../src/services/disruptiveEvents.js';
+import { classifyStateDisruption, groupEventsByRegion } from '../src/services/usDisruptionRegions.js';
+import { fetchConfiguredPowerOutages, normalizePowerOutageRecord, summarizeOutageEvents } from '../src/services/powerOutages.js';
 
 const nwsSource = getSourceDefinition('nws-alerts-active-by-state');
 
@@ -105,4 +107,65 @@ test('rate limited source is marked stale instead of silently clearing without h
   assert.deepEqual(result.events, []);
   assert.equal(result.health.status, SOURCE_HEALTH_STATUSES.RATE_LIMITED);
   assert.equal(result.health.stale, true);
+});
+
+test('state disruption classification supports the USA map overview', () => {
+  assert.equal(classifyStateDisruption([]).label, 'Quiet');
+  assert.equal(classifyStateDisruption([{ disruptionScore: 55, status: 'active' }]).label, 'Watch');
+  assert.equal(classifyStateDisruption([{ disruptionScore: 75, status: 'active' }]).label, 'Elevated');
+  assert.equal(classifyStateDisruption([{ disruptionScore: 95, status: 'active' }]).label, 'Severe');
+});
+
+test('events group by city county or region for state drilldowns', () => {
+  const grouped = groupEventsByRegion([
+    { id: 'a', city: 'Tampa' },
+    { id: 'b', county: 'Hillsborough County' },
+    { id: 'c', region: 'Hillsborough County' },
+  ]);
+
+  assert.equal(grouped.Tampa.length, 1);
+  assert.equal(grouped['Hillsborough County'].length, 2);
+});
+
+test('power outage records normalize into the shared disruptive event model', () => {
+  const event = normalizePowerOutageRecord({
+    id: 'outage-1',
+    state: 'FL',
+    county: 'Pinellas County',
+    affectedCustomers: 12000,
+    totalCustomers: 100000,
+    estimatedRestorationAt: '2026-06-02T07:00:00Z',
+  }, {
+    id: 'utility-test',
+    name: 'Utility Test Source',
+    url: 'https://utility.example/outages.json',
+    enabled: true,
+  });
+
+  assert.equal(event.sourceType, SOURCE_TYPES.UTILITY_OUTAGE);
+  assert.equal(event.category, 'power');
+  assert.equal(event.eventType, 'Power outage');
+  assert.equal(event.state, 'FL');
+  assert.equal(event.region, 'Pinellas County');
+  assert.equal(event.affectedCustomers, 12000);
+  assert.equal(event.severity, 'Moderate');
+});
+
+test('power outage summary totals active affected customers', () => {
+  const summary = summarizeOutageEvents([
+    { affectedCustomers: 10, disruptionScore: 20, status: 'active' },
+    { affectedCustomers: 25, disruptionScore: 50, status: 'active' },
+  ]);
+
+  assert.equal(summary.activeEvents, 2);
+  assert.equal(summary.affectedCustomers, 35);
+  assert.equal(summary.maxScore, 50);
+});
+
+test('power outage fetch reports coverage gap when no vetted endpoint is enabled', async () => {
+  const result = await fetchConfiguredPowerOutages({ sources: [] });
+
+  assert.deepEqual(result.events, []);
+  assert.equal(result.health[0].status, SOURCE_HEALTH_STATUSES.UNCHECKED);
+  assert.match(result.health[0].message, /No vetted utility outage endpoint/i);
 });

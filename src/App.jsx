@@ -10,6 +10,7 @@ import AlertsPanel from './components/AlertsPanel';
 import AirQuality from './components/AirQuality';
 import Cameras from './components/Cameras';
 import SatelliteView from './components/SatelliteView';
+import DisruptionsView from './components/DisruptionsView';
 
 import ModelsView from './components/ModelsView';
 import SurfaceAnalysis from './components/SurfaceAnalysis';
@@ -79,6 +80,7 @@ export default function App() {
                 mode={themeMode}
               />
             )}
+            {activeTab === 'disruptions' && <DisruptionsView />}
             {activeTab === 'radar' && <RadarMap location={location} />}
             {activeTab === 'satellite' && <SatelliteView />}
 
